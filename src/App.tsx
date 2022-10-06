@@ -21,7 +21,7 @@ const GlobalStyle=createGlobalStyle`
         border: 0;
         font-size: 100%;
         font: inherit;
-        vertical-align: middle;
+        vertical-align: baseline;
     }
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure,
@@ -57,7 +57,7 @@ const GlobalStyle=createGlobalStyle`
         background-color: ${(props)=> props.theme.bgColor};
         color: ${(props)=> props.theme.textColor};
     }
-    a{text-decoration: none;}
+    a{text-decoration: none;color:inherit;}
 `
 const Title = styled.h1`
   color: ${(props) => props.theme.textColor};

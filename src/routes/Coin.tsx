@@ -10,7 +10,7 @@ const Coin = () => {
     const {coinId} = useParams<{coinId:string}>();
 
     return(
-        <h1>Conin : {coinId}</h1>
+        <h1>Coin : {coinId}</h1>
     )
 }
 export default  Coin ;
