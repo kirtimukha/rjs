@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 const Title = styled.h1`
 color: ${props => props.theme.accentColor };
@@ -34,65 +35,56 @@ const Coin = styled.li`
     }
 `
 
-const coins = [
-    {
-        id: "btc-bitcoin",
-        name: "Bitcoin",
-        symbol: "BTC",
-        rank: 1,
-        is_new: false,
-        is_active: true,
-        type: "coin",
-    },
-    {
-        id: "eth-ethereum",
-        name: "Ethereum",
-        symbol: "ETH",
-        rank: 2,
-        is_new: false,
-        is_active: true,
-        type: "coin",
-    },
-    {
-        id: "hex-hex",
-        name: "HEX",
-        symbol: "HEX",
-        rank: 3,
-        is_new: false,
-        is_active: true,
-        type: "token",
-    },
-];
+const Loader = styled.span`
+    display:block;
+    text-align: center;
+`
+interface CoinInterface {
+    id: string,
+    name:  string,
+    symbol:  string,
+    rank: number,
+    is_new: boolean,
+    is_active: boolean,
+    type: string
+}
 
 const Coins = () => {
+    const [coins, setCoins] = useState<CoinInterface[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(()=> {
+        (async () => {
+            const response = await fetch ("https://api.coinpaprika.com/v1/coins");
+            const json = await response.json();
+            setCoins(json.slice(0,100));
+            setLoading(false);
+        })();
+    }, []);
+    console.log(coins.length);
     return(
         <Container>
 
             <Header>
                 <Title >코인</Title>
             </Header>
+            {loading ?
+                (<Loader>Loading...</Loader>)
+                :
+                (
+                <CoinsList>
 
-            <CoinsList>
+                    {coins.map(coin =>
 
-                {coins.map(coin =>
+                        <Coin key={coin.id}>
+                            <Link to={`/${coin.id}`}> {coin.name} &rarr;</Link>
 
-                    <Coin key={coin.id}>
-                        <Link to={`/${coin.id}`}> {coin.name} &rarr;</Link>
-                       {/* {coin.rank} &nbsp;
-
-                        {coin.symbol} &nbsp;
-
-
-
-                        {coin.is_new}
-
-                        {coin.is_active}
-
-                        {coin.type}*/}
-                    </Coin> )
-                }
-                <Coin></Coin>
-            </CoinsList>
+                        </Coin> )
+                    }
+                    <Coin></Coin>
+                </CoinsList>
+                )
+            }
 
         </Container>
 
