@@ -2,7 +2,8 @@ import styled, {createGlobalStyle} from "styled-components";
 import React from "react";
 import Router from "./Router";
 const GlobalStyle=createGlobalStyle`
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Source+Sans+Pro:wght@300;400;900&display=swap');
+   
+    *{box-sizing:border-box; }
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
     a, abbr, acronym, address, big, cite, code,
@@ -34,7 +35,10 @@ const GlobalStyle=createGlobalStyle`
         display: none;
     }
     body {
+        font-family: 'Open Sans', 'Source Sans Pro', sans-serif;
         line-height: 1;
+        background-color: ${(props)=> props.theme.bgColor};
+        color: ${(props)=> props.theme.textColor};
     }
     menu, ol, ul {
         list-style: none;
@@ -51,12 +55,8 @@ const GlobalStyle=createGlobalStyle`
         border-collapse: collapse;
         border-spacing: 0;
     }
-    *{box-sizing:border-box;}
-    body{
-        font-family: 'Source Sans Pro', sans-serif;
-        background-color: ${(props)=> props.theme.bgColor};
-        color: ${(props)=> props.theme.textColor};
-    }
+
+
     a{text-decoration: none;color:inherit;}
 `
 const Title = styled.h1`

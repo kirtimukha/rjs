@@ -3,8 +3,11 @@ import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 
 const Title = styled.h1`
-color: ${props => props.theme.accentColor };
-font-size: 3rem;
+    margin:2rem auto 1.5rem;
+    text-align:center;
+    font-size: 3rem;
+    letter-spacing: -0.25rem;
+    color: ${props => props.theme.accentColor };
 `
 
 const Container = styled.div`
@@ -26,8 +29,11 @@ const Coin = styled.li`
     color:  ${props => props.theme.bgColor };
     margin-bottom: 0.75rem;
     border-radius: 0.875rem;
-    a{transition : color 0.2s ease-in;display:block;
-        padding: 1.125rem;}
+    a{
+        display:flex;
+        align-items:center;
+        transition : color 0.2s ease-in;
+        padding: 1rem;}
     &:hover{
         a{
             color:${props => props.theme.accentColor };
@@ -38,6 +44,12 @@ const Coin = styled.li`
 const Loader = styled.span`
     display:block;
     text-align: center;
+`
+
+const Img= styled.img`
+    width: 35px;
+    height: 35px;
+    margin-right:10px;
 `
 interface CoinInterface {
     id: string,
@@ -73,11 +85,20 @@ const Coins = () => {
                 :
                 (
                 <CoinsList>
-
                     {coins.map(coin =>
-
                         <Coin key={coin.id}>
-                            <Link to={`/${coin.id}`}> {coin.name} &rarr;</Link>
+                            {/*<Link to={`/${coin.id}`}>
+                               <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} alt=""/>{
+                                coin.name} &rarr;
+                            </Link>*/}
+
+                            <Link to={`/${coin.id}`}
+                                  state={coin}
+                            >
+                                <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} alt=""/>{
+                                coin.name} &rarr;
+                            </Link>
+
 
                         </Coin> )
                     }
