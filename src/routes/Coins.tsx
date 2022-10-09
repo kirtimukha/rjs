@@ -1,7 +1,9 @@
 import styled from "styled-components"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
+const Header = styled.div`
 
+`
 const Title = styled.h1`
     margin:2rem auto 1.5rem;
     text-align:center;
@@ -15,14 +17,11 @@ const Container = styled.div`
     max-width: 30rem;
     margin:0 auto;
 `
-const Header = styled.div`
 
-`
 
 const CoinsList = styled.ul`
 
 `
-
 
 const Coin = styled.li`
     background-color: white;
@@ -41,16 +40,16 @@ const Coin = styled.li`
     }
 `
 
-const Loader = styled.span`
-    display:block;
-    text-align: center;
-`
-
 const Img= styled.img`
     width: 35px;
     height: 35px;
     margin-right:10px;
 `
+const Loader = styled.span`
+    display:block;
+    text-align: center;
+`
+
 interface CoinInterface {
     id: string,
     name:  string,
@@ -73,7 +72,6 @@ const Coins = () => {
             setLoading(false);
         })();
     }, []);
-    console.log(coins.length);
     return(
         <Container>
 
@@ -87,15 +85,15 @@ const Coins = () => {
                 <CoinsList>
                     {coins.map(coin =>
                         <Coin key={coin.id}>
-                            {/*<Link to={`/${coin.id}`}>
+                            {/*<Link to={`/${coin.id}`} state: {name : coin.name}>
                                <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} alt=""/>{
                                 coin.name} &rarr;
                             </Link>*/}
 
-                            <Link to={`/${coin.id}`}
-                                  state={coin}
+                            <Link to={`/${coin.id}`} //react 18 pathname  안 씀
+                                  state={coin} // state : 정보를 백그라운드에서 다른 컴포넌트에 보내는 방법
                             >
-                                <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} alt=""/>{
+                                <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} alt={`${coin.name}`}/>{
                                 coin.name} &rarr;
                             </Link>
 
