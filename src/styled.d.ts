@@ -6,4 +6,9 @@ declare module "styled-components" {
         bgColor: string;
         accentColor: string;
     }
+    export interface LightTheme {
+        textColor: string;
+        bgColor: string;
+        accentColor: string;
+    }
 }

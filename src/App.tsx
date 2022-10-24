@@ -1,6 +1,7 @@
 import styled, {createGlobalStyle} from "styled-components";
 import React from "react";
 import Router from "./Router";
+import Circle from "./Circle";
 const GlobalStyle=createGlobalStyle`
    
     *{box-sizing:border-box; }
@@ -78,6 +79,8 @@ const App = () => {
         <>
         <GlobalStyle/>
         <Router />
+        <Circle bgColor="teal" borderColor="yellow" />
+        <Circle bgColor="tomato"/>
         </>
     );
 }
