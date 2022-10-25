@@ -1,9 +1,8 @@
 import styled, {createGlobalStyle} from "styled-components";
-import React from "react";
+import React, {useState} from "react";
 import Router from "./Router";
 import Circle from "./Circle";
-const GlobalStyle=createGlobalStyle`
-   
+const GlobalStyle=createGlobalStyle`   
     *{box-sizing:border-box; }
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -15,7 +14,7 @@ const GlobalStyle=createGlobalStyle`
     fieldset, form, label, legend,
     table, caption, tbody, tfoot, thead, tr, th, td,
     article, aside, canvas, details, embed,
-    figure, figcaption, footer, header, hgroup,
+    figure, figcaption, footer, header, hgroup, 
     main, menu, nav, output, ruby, section, summary,
     time, mark, audio, video {
         margin: 0;
@@ -75,12 +74,21 @@ const Wrapper = styled.div`
 
 
 const App = () => {
+    const [value, setValue] = useState("");
+    const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+        console.log(event.currentTarget.value)
+    }
     return (
         <>
         <GlobalStyle/>
+        {/*<Circle bgColor="teal" borderColor="yellow" />
+        <Circle bgColor="tomato"/>*/}
+            <form>
+                <input onChange={onChange} value={value} type="text" placeholder="username"/>
+                <button>Log in</button>
+            </form>
         <Router />
-        <Circle bgColor="teal" borderColor="yellow" />
-        <Circle bgColor="tomato"/>
+
         </>
     );
 }
