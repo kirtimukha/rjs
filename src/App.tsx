@@ -70,17 +70,22 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
+const Button = styled.button`
+background-color: ${(props) => props.theme.accentColor};
+    color: ${(props) => props.theme.textColor};
+`
 
 
 const App = () => {
     const [value, setValue] = useState("");
     const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+
         console.log(event.currentTarget.value)
         const { currentTarget: {value}, } = event;
         setValue(value)
     }
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+// const onSubmit = (event: React.MouseEvent<HTMLButtonElement>) => { 만약 폼에 감싸여 있지 앟다면
         event.preventDefault();
         console.log("hello", value)
 
@@ -92,7 +97,7 @@ const App = () => {
         <Circle bgColor="tomato"/>*/}
             <form onSubmit={onSubmit}>
                 <input onChange={onChange} value={value} type="text" placeholder="username"/>
-                <button>Log in</button>
+                <Button>Log in</Button>
             </form>
         <Router />
 
