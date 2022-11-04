@@ -1,9 +1,6 @@
 import styled from "styled-components"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {fetchCoins} from "../api";
-import {useQuery} from "react-query";
-
 const Header = styled.div`
 
 `
@@ -54,7 +51,7 @@ const Loader = styled.span`
     text-align: center;
 `
 
-interface ICoin {
+interface CoinInterface {
     id: string,
     name:  string,
     symbol:  string,
@@ -65,24 +62,34 @@ interface ICoin {
 }
 
 const Coins = () => {
-    //useQuery 74~84 라인을 대체하는 내용임 대박
-    // needs 2 args, 1. query key, 2. fetcher function
-    const {isLoading, data}= useQuery<ICoin[]>(
-        "allCoins",  fetchCoins
-    );
-    console.log(data, ":: DATA");
+    const [coins, setCoins] = useState<CoinInterface[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(()=> {
+        (async () => {
+            const response = await fetch ("https://api.coinpaprika.com/v1/coins");
+            const json = await response.json();
+            setCoins(json.slice(0,100));
+            setLoading(false);
+        })();
+    }, []);
     return(
         <Container>
+
             <Header>
                 <Title >코인</Title>
             </Header>
-            {isLoading ?
+            {loading ?
                 (<Loader>Loading...</Loader>)
                 :
                 (
                 <CoinsList>
-                    {data?.slice(0, 10).map( (coin) =>
+                    {coins.map(coin =>
                         <Coin key={coin.id}>
+                            {/*<Link to={`/${coin.id}`} state: {name : coin.name}>
+                               <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} alt=""/>{
+                                coin.name} &rarr;
+                            </Link>*/}
 
                             <Link to={`/${coin.id}`} //react 18 pathname  안 씀
                                   state={coin} // state : 링크를 통해서 정보를 백그라운드(비하인드 더 씬)에서 다른 컴포넌트에 보내는 방법

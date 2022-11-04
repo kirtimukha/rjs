@@ -1,8 +1,9 @@
 import styled, {createGlobalStyle} from "styled-components";
 import React, {useState} from "react";
+import {ReactQueryDevtools} from "react-query/devtools";
 import Router from "./Router";
-import Circle from "./Circle";
-const GlobalStyle=createGlobalStyle`   
+// import Circle from ".Router/Circle";
+const GlobalStyle=createGlobalStyle`
     *{box-sizing:border-box; }
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -20,8 +21,8 @@ const GlobalStyle=createGlobalStyle`
         margin: 0;
         padding: 0;
         border: 0;
-        font-size: 100%;
         font: inherit;
+        font-size: 100%;
         vertical-align: baseline;
     }
     /* HTML5 display-role reset for older browsers */
@@ -70,11 +71,13 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Button = styled.button`
-background-color: ${(props) => props.theme.accentColor};
-    color: ${(props) => props.theme.textColor};
-`
 
+const Button = styled.div`
+    color: ${(props) => props.theme.textColor};
+    background-color: ${(props) => props.theme.accentColor};
+    display: inline-block;
+    padding:3px 6px;
+`
 
 const App = () => {
     const [value, setValue] = useState("");
@@ -85,7 +88,7 @@ const App = () => {
         setValue(value)
     }
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-// const onSubmit = (event: React.MouseEvent<HTMLButtonElement>) => { 만약 폼에 감싸여 있지 앟다면
+        // const onSubmit = (event: React.MouseEvent<HTMLButtonElement>) => { 만약 폼에 감싸여 있지 앟다면
         event.preventDefault();
         console.log("hello", value)
 
@@ -93,15 +96,18 @@ const App = () => {
     return (
         <>
         <GlobalStyle/>
+        <form onSubmit={onSubmit}>
+            <input onChange={onChange} value={value} type="text" placeholder="username"/>
+            <Button>Log in</Button>
+        </form>
+        <Router />
+            <ReactQueryDevtools initialIsOpen={true} />
         {/*<Circle bgColor="teal" borderColor="yellow" />
         <Circle bgColor="tomato"/>*/}
-            <form onSubmit={onSubmit}>
-                <input onChange={onChange} value={value} type="text" placeholder="username"/>
-                <Button>Log in</Button>
-            </form>
-        <Router />
 
         </>
+
+
     );
 }
 

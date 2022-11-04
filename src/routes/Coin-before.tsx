@@ -1,13 +1,9 @@
 import {useEffect, useState} from "react";
 import {Link, Outlet, Route, Routes, useLocation, useMatch, useParams} from "react-router-dom";
 import styled from "styled-components";
-import {useQuery} from "react-query";
-import {fetchCoinInfo, fetchCoinTickers} from "../api";
-
 import Price from "./Price";
 import Chart from "./Chart";
-
-
+import chart from "./Chart";
 const Loader = styled.span`
     margin-top: 3rem;
     display:block;
@@ -50,7 +46,6 @@ const OverviewItem = styled.div`
 `;
 const Description = styled.p`
   margin: 20px 0px;
-    line-height:1.4;
 `;
 const Tabs = styled.div`
   display: grid;
@@ -80,7 +75,11 @@ interface RouteParams {
 interface RouteState {
     state : {name: string}
 }
-const CoinsList = styled.ul``
+const CoinsList = styled.ul`
+
+`
+
+
 interface LocationState {
     state :{
         name: string
@@ -152,50 +151,65 @@ interface PriceData{
 }
 const Coin = () => {
     const {coinId} = useParams<{coinId:string}>();
-    const {state} = useLocation() as LocationState;
-    // const {coinId} = useParams<RouteParams>(); 작동하지 않음
-    // const {state} = useLocation<RouteState>(); 작동하지 않음
+    const {state} = useLocation() as LocationState; /*state를 받을 수있음*/
+    const [loading, setLoading] = useState(false);// 이미 api 를 불렀을 때
+                                                            // state를 통해 불러진 데이터를 이용해서 api 다시 로드 하지 않고 빠르게 앱을 다시 부를 수 있다
+    /* interface routeParams { coinId :  string ; } const {coinId} = useParams<routeParams>(); <--  이 방법은 에러가 난다*/
+
+
+    const [info, setInfo] = useState<InfoData>();
+    const [priceInfo, setPriceInfo] = useState<PriceData>();
     const priceMatch = useMatch("/:coinId/price");
     const chartMatch = useMatch("/:coinId/chart");
-    const {isLoading: infoLoading, data: infoData}= useQuery<InfoData>(["info", coinId], () =>  fetchCoinInfo(`${coinId}`));
-    const {isLoading: tickersLoading, data: tickersData}= useQuery<PriceData>(["tickers", coinId], () =>  fetchCoinTickers(`${coinId}`));
-    const loading = infoLoading || tickersLoading;
+    useEffect(() => {
+        (async () => {
+            const infoData = await (
+                await fetch (`https://api.coinpaprika.com/v1/coins/${coinId}`)
+                                    ).json();
+            //console.log(infoData);
+            const priceData = await (
+                await fetch (`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+                                    ).json();
+           //console.log(priceData);
+            setInfo(infoData);
+            setPriceInfo(priceData);
+        })();
+    }, [coinId]);
 
     return(
         <Container>
             <Header>
                 <Title>
-                    {state?.name ? state.name : loading ? "Loading1..." : infoData?.name}
+                    {state?.name ? state.name : loading ? "Loading1..." : info?.name}
                 </Title>
             </Header>
 
-            {loading ? ( <> <Loader>Loading2...</Loader> <div>{infoData?.rank}  </div> </> )
+            {loading ? ( <> <Loader>Loading2...</Loader> <div>{info?.rank}  </div> </> )
             : (
                 <>
                 <Overview>
                     <OverviewItem>
                         <span>Rank:</span>
-                        <span>{infoData?.rank} rank</span>
-
+                        <span>{info?.rank} rank</span>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Symbol:</span>
-                        <span>{infoData?.symbol}</span>
+                        <span>${info?.symbol}</span>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Open Source:</span>
-                        <span>{infoData?.open_source ? "Yes" : "No"}</span>
+                        <span>{info?.open_source ? "Yes" : "No"}</span>
                     </OverviewItem>
                 </Overview>
-                <Description>{infoData?.description}</Description>
+                <Description>{info?.description}</Description>
                 <Overview>
                     <OverviewItem>
                         <span>Total Supply:</span>
-                        <span>{tickersData?.total_supply}</span>
+                        <span>{priceInfo?.total_supply}</span>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Max Supply:</span>
-                        <span>{tickersData?.max_supply}</span>
+                        <span>{priceInfo?.max_supply}</span>
                     </OverviewItem>
                 </Overview>
                 <Tabs>
@@ -203,7 +217,7 @@ const Coin = () => {
                     <Tab isActive={priceMatch !== null }><Link to={`price`}>Price</Link></Tab>
                     <Tab isActive={chartMatch !== null }><Link to={`chart`}>Chart</Link></Tab>
                 </Tabs>
-                <Outlet />
+                <Outlet/>
                 </>
             ) }
 
