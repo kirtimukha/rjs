@@ -1,7 +1,10 @@
-import styled, {createGlobalStyle} from "styled-components";
 import React, {useState} from "react";
-import {ReactQueryDevtools} from "react-query/devtools";
 import Router from "./Router";
+import {ReactQueryDevtools} from "react-query/devtools";
+import styled, {ThemeProvider, createGlobalStyle} from "styled-components";
+import {darkTheme, lightTheme} from "./theme" ;
+import {useRecoilValue} from "recoil";
+import {isDarkAtom} from "./atom";
 // import Circle from ".Router/Circle";
 const GlobalStyle=createGlobalStyle`
     *{box-sizing:border-box; }
@@ -73,7 +76,7 @@ const Wrapper = styled.div`
 `;
 
 const Button = styled.div`
-    color: ${(props) => props.theme.textColor};
+    color: #fff;
     background-color: ${(props) => props.theme.accentColor};
     display: inline-block;
     padding:3px 6px;
@@ -90,18 +93,21 @@ const App = () => {
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         // const onSubmit = (event: React.MouseEvent<HTMLButtonElement>) => { 만약 폼에 감싸여 있지 앟다면
         event.preventDefault();
-        console.log("hello", value)
-
     }
+    //const [isDark, setDark ] = useState(true);
+    //const ToggleMode = () => setDark ( current => !current );
+    const isDark = useRecoilValue(isDarkAtom);
     return (
         <>
+        <ThemeProvider theme={isDark? darkTheme: lightTheme}>
         <GlobalStyle/>
         <form onSubmit={onSubmit}>
             <input onChange={onChange} value={value} type="text" placeholder="username"/>
             <Button>Log in</Button>
         </form>
-        <Router />
-            <ReactQueryDevtools initialIsOpen={true} />
+        <Router/>
+        <ReactQueryDevtools initialIsOpen={true} />
+        </ThemeProvider>
         {/*<Circle bgColor="teal" borderColor="yellow" />
         <Circle bgColor="tomato"/>*/}
 

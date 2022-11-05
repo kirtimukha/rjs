@@ -1,45 +1,49 @@
 import styled from "styled-components"
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React from "react";
 import {fetchCoins} from "../api";
 import {useQuery} from "react-query";
+import {Helmet} from "react-helmet";
+import { useSetRecoilState} from "recoil";
+import {isDarkAtom} from "../atom";
 
 const Header = styled.div`
 
 `
 const Title = styled.h1`
+    
     margin:2rem auto 1.5rem;
     text-align:center;
     font-size: 3rem;
     letter-spacing: -0.25rem;
     color: ${props => props.theme.accentColor };
+    button{display: inline-block;}
 `
-
 const Container = styled.div`
     padding:0 1.5rem;
     max-width: 30rem;
     margin:0 auto;
 `
-
-
-const CoinsList = styled.ul`
-
-`
+const CoinsList = styled.ul` `
 
 const Coin = styled.li`
-    background-color: white;
-    color:  ${props => props.theme.bgColor };
+    background-color:   ${props => props.theme.bgColor };
+    color:  ${props => props.theme.textColor };
     margin-bottom: 0.75rem;
-    border-radius: 0.875rem;
     a{
+        border-radius: 0.875rem;
         display:flex;
         align-items:center;
-        transition : color 0.2s ease-in;
+        transition : all 0.2s ease-in;
         padding: 1rem;
+        color:inherit;
+        box-shadow: 0 0 3px rgba(0,0,0, 0.05);
+        border:1px solid ${props => props.theme.textColor };
     }
     &:hover{
         a{
             color:${props => props.theme.accentColor };
+            border:1px solid ${props => props.theme.accentColor };
         }
     }
 `
@@ -71,10 +75,16 @@ const Coins = () => {
         "allCoins",  fetchCoins
     );
     console.log(data, ":: DATA");
+    const setDarkAtom = useSetRecoilState(isDarkAtom); // settingFn
+    const toggleModeFn = () => setDarkAtom(prev => !prev)
     return(
         <Container>
+            <Helmet>
+                <title>코인</title>
+            </Helmet>
             <Header>
-                <Title >코인</Title>
+                <Title>코인</Title>
+                <button onClick={toggleModeFn}>Toggle Mode</button>
             </Header>
             {isLoading ?
                 (<Loader>Loading...</Loader>)
