@@ -11,13 +11,18 @@ const Header = styled.div`
 
 `
 const Title = styled.h1`
-    
     margin:2rem auto 1.5rem;
     text-align:center;
     font-size: 3rem;
     letter-spacing: -0.25rem;
     color: ${props => props.theme.accentColor };
-    button{display: inline-block;}
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    button{
+        margin-left: 1rem;
+        font-size: 0.3em;
+    }
 `
 const Container = styled.div`
     padding:0 1.5rem;
@@ -69,22 +74,21 @@ interface ICoin {
 }
 
 const Coins = () => {
-    //useQuery 74~84 라인을 대체하는 내용임 대박
+    // useQuery 74~84 라인을 대체하는 내용임 대박
     // needs 2 args, 1. query key, 2. fetcher function
     const {isLoading, data}= useQuery<ICoin[]>(
         "allCoins",  fetchCoins
     );
-    console.log(data, ":: DATA");
-    const setDarkAtom = useSetRecoilState(isDarkAtom); // settingFn
-    const toggleModeFn = () => setDarkAtom(prev => !prev)
+
     return(
         <Container>
             <Helmet>
                 <title>코인</title>
             </Helmet>
             <Header>
-                <Title>코인</Title>
-                <button onClick={toggleModeFn}>Toggle Mode</button>
+                <Title>코인
+
+                </Title>
             </Header>
             {isLoading ?
                 (<Loader>Loading...</Loader>)
@@ -93,7 +97,6 @@ const Coins = () => {
                 <CoinsList>
                     {data?.slice(0, 10).map( (coin) =>
                         <Coin key={coin.id}>
-
                             <Link to={`/${coin.id}`} //react 18 pathname  안 씀
                                   state={coin} // state : 링크를 통해서 정보를 백그라운드(비하인드 더 씬)에서 다른 컴포넌트에 보내는 방법
                             >

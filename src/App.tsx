@@ -5,6 +5,7 @@ import styled, {ThemeProvider, createGlobalStyle} from "styled-components";
 import {darkTheme, lightTheme} from "./theme" ;
 import {useRecoilValue} from "recoil";
 import {isDarkAtom} from "./atom";
+import Header from "./components/Header";
 // import Circle from ".Router/Circle";
 const GlobalStyle=createGlobalStyle`
     *{box-sizing:border-box; }
@@ -62,19 +63,21 @@ const GlobalStyle=createGlobalStyle`
 
 
     a{text-decoration: none;color:inherit;}
+    button {
+        display: inline-block;      
+        border-radius: 3px;
+        padding: 2px 6px;
+        color: ${props => props.theme.btnTextColor};
+        background-color: ${props => props.theme.accentColor};
+        cursor: pointer;
+        transition: all .75s;
+        border: none;
+        &:hover {
+            color: ${props => props.theme.btnTextHoverColor};
+            border: none;
+        }
+    }
 `
-const Title = styled.h1`
-  color: ${(props) => props.theme.textColor};
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Button = styled.div`
     color: #fff;
     background-color: ${(props) => props.theme.accentColor};
@@ -101,6 +104,7 @@ const App = () => {
         <>
         <ThemeProvider theme={isDark? darkTheme: lightTheme}>
         <GlobalStyle/>
+        <Header />
         <form onSubmit={onSubmit}>
             <input onChange={onChange} value={value} type="text" placeholder="username"/>
             <Button>Log in</Button>

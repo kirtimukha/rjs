@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Link, Outlet, Route, Routes, useLocation, useMatch, useParams} from "react-router-dom";
+import {Link, Outlet, Route, Routes, useLocation, useMatch, useNavigate, useParams} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import styled from "styled-components";
 import {useQuery} from "react-query";
@@ -20,6 +20,13 @@ const Title = styled.h1`
     font-size: 3rem;
     letter-spacing: -0.25rem;
     color: ${props => props.theme.accentColor };
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button{
+        margin-left: 1rem;
+        font-size: 0.3em;
+    }
 `
 
 const Container = styled.div`
@@ -34,7 +41,8 @@ const Header = styled.div`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  //background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${props=>props.theme.loaderColor};    
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -65,13 +73,14 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${props=>props.theme.loaderColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
   a {
     display: block;
+      &:hover{color:  ${(props) => props.theme.accentColor}; } 
   }
 `;
 
@@ -164,7 +173,7 @@ const Coin = () => {
         {refetchInterval : 5000}
     );
     const loading = infoLoading || tickersLoading;
-
+    const navigate = useNavigate();
     return(
         <Container>
             <Helmet>
@@ -173,6 +182,7 @@ const Coin = () => {
             <Header>
                 <Title>
                     {state?.name ? state.name : loading ? "Loading1..." : infoData?.name}
+                    <button onClick={() => navigate(-1)}>See All Coins </button>
                 </Title>
             </Header>
 
@@ -206,7 +216,7 @@ const Coin = () => {
                     </OverviewItem>
                 </Overview>
                 <Tabs>
-                    <Tab isActive={priceMatch !== null }><Link to={`price`}>Price</Link></Tab>
+                    <Tab isActive={priceMatch !== null || ( priceMatch == null && chartMatch == null ) }><Link to={`price`}>Price</Link></Tab>
                     <Tab isActive={chartMatch !== null }><Link to={`chart`}>Chart</Link></Tab>
                 </Tabs>
                 <Outlet context={coinId}/>
